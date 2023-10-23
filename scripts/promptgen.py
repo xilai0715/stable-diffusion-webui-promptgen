@@ -8,6 +8,9 @@ import transformers
 from modules import shared, generation_parameters_copypaste
 
 from modules import scripts, script_callbacks, devices, ui
+
+from modules import paths, shared, devices, modelloader, errors
+
 import gradio as gr
 
 from modules.ui_components import FormRow
@@ -23,7 +26,7 @@ available_models = []
 current = Model()
 
 base_dir = scripts.basedir()
-models_dir = os.path.join(base_dir, "models")
+models_dir = os.path.join(paths.models_path, "promptgen/models")
 
 
 def device():
@@ -37,6 +40,8 @@ def list_available_models():
 
     for dirname in os.listdir(models_dir):
         if os.path.isdir(os.path.join(models_dir, dirname)):
+            if dirname=="AUTOMATIC":
+                continue
             available_models.append(dirname)
 
     for name in [x.strip() for x in shared.opts.promptgen_names.split(",")]:
